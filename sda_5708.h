@@ -27,13 +27,10 @@
 #define CS (1 << CS_pin)
 #define DAT (1 << DATA_pin)
 
-/// "variable" to manipulate the pin directly via GPIO masked access
-#define SDA_clk	    							gpio_masked_access_t GPIO_MASKED_ACCESS(LPC_GPIO1, CLK_pin)
-#define SDA_reset								gpio_masked_access_t GPIO_MASKED_ACCESS(LPC_GPIO1, RESET_pin)
-#define SDA_cs  								gpio_masked_access_t GPIO_MASKED_ACCESS(LPC_GPIO0, CS_pin)
-#define SDA_data								gpio_masked_access_t GPIO_MASKED_ACCESS(LPC_GPIO0, DATA_pin)
-
 void init_SDA(void);
+void write_SDA_char(unsigned int position, unsigned int value);
+void write_SDA(uint8_t value);
+
 void set_SDA_clk(void);
 void clear_SDA_clk(void);
 void set_SDA_cs(void);

@@ -14,6 +14,7 @@
 */
 #include "inc/LPC11xx.h"
 #include "sda_5708.h"
+#include "font5x7.h"
 
 void init_SDA(void){
 	volatile uint32_t count, count_max = 1000000;
@@ -32,7 +33,7 @@ void init_SDA(void){
 
 void write_SDA(uint8_t value){
 
-	volatile uint32_t count, count_max = 10000;
+	volatile uint32_t count, count_max = 1000;
 	clear_SDA_clk();
 	clear_SDA_cs();
 	for (count = 0; count < count_max; count++);	// delay
@@ -52,7 +53,33 @@ void write_SDA(uint8_t value){
 		clear_SDA_clk();
 	}
 	set_SDA_cs();
+}
 
+void write_SDA_char(unsigned int position, unsigned int value){
+	unsigned int data;
+	unsigned int column0 = *(Font5x7 + 5*(value + 16) + 0);
+	unsigned int column1 = *(Font5x7 + 5*(value + 16) + 1);
+	unsigned int column2 = *(Font5x7 + 5*(value + 16) + 2);
+	unsigned int column3 = *(Font5x7 + 5*(value + 16) + 3);
+	unsigned int column4 = *(Font5x7 + 5*(value + 16) + 4);
+
+	if (position < 8){
+		data = 0xA0 + position;
+		write_SDA(data);
+	} else
+		return;
+
+	for (int i = 0; i < 7; ++i)
+	{
+		data = ((column0 & 0x1) << 4) + ((column1 & 0x1) << 3) + ((column2 & 0x1) << 2) + ((column3 & 0x1) << 1) + ((column4 & 0x1) << 0);
+		write_SDA(data);
+		column0 = column0 >> 1;
+		column1 = column1 >> 1;
+		column2 = column2 >> 1;
+		column3 = column3 >> 1;
+		column4 = column4 >> 1;
+	}
+	return;
 }
 
 void set_SDA_clk(void){

@@ -85,14 +85,14 @@ int main(void)
 	write_SDA(0xC8);
 	while (1)
 	{
-		write_SDA(0xA0);
-		write_SDA(0x1F);
-		write_SDA(0x1F);
-		write_SDA(0x1F);
-		write_SDA(0x11);
-		write_SDA(0x11);
-		write_SDA(0x1F);
-		write_SDA(0x1F);
+		write_SDA_char(0, 1);
+		write_SDA_char(1, 2);
+		write_SDA_char(2, 3);
+		write_SDA_char(3, 4);
+		write_SDA_char(4, 5);
+		write_SDA_char(5, 6);
+		write_SDA_char(6, 7);
+		write_SDA_char(7, 8);
 	}
 }
 
