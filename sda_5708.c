@@ -13,46 +13,36 @@
 * =====================================================================================
 */
 #include "inc/LPC11xx.h"
+#include "spi.h"
 #include "sda_5708.h"
 #include "font5x7.h"
 
 void init_SDA(void){
 	volatile uint32_t count, count_max = 1000000;
-	
-	LPC_GPIO0->DIR |= CS;
-	LPC_GPIO0->DIR |= DAT;
-	LPC_GPIO1->DIR |= CLK;
+
+	init_SPI();
 	LPC_GPIO1->DIR |= RESET;
 
 	clear_SDA_reset();
 	for (count = 0; count < count_max; count++);	// delay
 	set_SDA_reset();
-	set_SDA_cs();
-	clear_SDA_clk();
 }
 
 void write_SDA(uint8_t value){
 
-	volatile uint32_t count, count_max = 1000;
-	clear_SDA_clk();
-	clear_SDA_cs();
-	for (count = 0; count < count_max; count++);	// delay
-	                                            	// 
+	while((LPC_SSP0->SR & 0x01) != 1);
+	LPC_SSP0->DR = reverse_value(value);
+}
+
+unsigned int reverse_value(unsigned int value){
+	unsigned int reverse = 0;
+
 	for (int i = 0; i < 8; ++i)
 	{
-		if (value & 0x01)
-		{
-			set_SDA_data();
-		} else
-			clear_SDA_data();
-
-		for (count = 0; count < count_max; count++);	// delay
-		set_SDA_clk();
-		for (count = 0; count < count_max; count++);
-		value = value >> 1;
-		clear_SDA_clk();
+		reverse = (reverse << 0x1) | (value & 0x1);
+		value = value >> 0x1;	
 	}
-	set_SDA_cs();
+	return reverse;
 }
 
 void write_SDA_char(unsigned int position, unsigned int value){
@@ -82,30 +72,9 @@ void write_SDA_char(unsigned int position, unsigned int value){
 	return;
 }
 
-void set_SDA_clk(void){
-	LPC_GPIO1->DATA |= CLK;
-}
-void clear_SDA_clk(void){
-	LPC_GPIO1->DATA &= ~CLK;
-}
-
 void set_SDA_reset(void){
 	LPC_GPIO1->DATA |= RESET;
 }
 void clear_SDA_reset(void){
 	LPC_GPIO1->DATA &= ~RESET;
-}
-
-void set_SDA_cs(void){
-	LPC_GPIO0->DATA |= CS;
-}
-void clear_SDA_cs(void){
-	LPC_GPIO0->DATA &= ~CS;
-}
-
-void set_SDA_data(void){
-	LPC_GPIO0->DATA |= DAT;
-}
-void clear_SDA_data(void){
-	LPC_GPIO0->DATA &= ~DAT;
 }
