@@ -1,10 +1,13 @@
 # sda5708_siemens
-LPC1114 library to drive the SDA5708 from Siemens
-using SPI0 
+LPC1114 library to drive the SDA5708 from Siemens using SPI0.
 
-check please [1] for more informations.
+![sda5708](IMG_20161130_053144.jpg "sda5708")
 
-[1] http://www.sbprojects.com/knowledge/footprints/sda5708/index.php
+Check please [www.sbprojects.com] or [sb-projects_sda5708_display.pdf] for more informations.
+
+
+[www.sbprojects.com]: http://www.sbprojects.com/knowledge/footprints/sda5708/index.php
+[sb-projects_sda5708_display.pdf]: (sb-projects_sda5708_display.pdf)
 
 Pin 1. Vcc
 Pin 1 is connected to the Vcc supply (+5V).
